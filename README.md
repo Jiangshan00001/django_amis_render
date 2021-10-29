@@ -65,7 +65,7 @@ urlpatterns = [
    the page will be shown below.
    press open /打开页面 will open the page.
    
-
+![页面展示](doc/amis-page-list.png)
   
 
 
