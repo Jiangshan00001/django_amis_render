@@ -5,8 +5,9 @@ amis version:1.3.4
 
 
 install:
-pip install django_amis_render
-
+    ```
+	pip install django_amis_render
+    ```
 
 usage:
 
@@ -27,6 +28,7 @@ urlpatterns = [
 
 3. add amis json file in your apps:
   eg:
+  ```
   my_project----my_project
                   |
 				  |
@@ -41,6 +43,8 @@ urlpatterns = [
 								   --------first_page.json
 								   --------second_page.json
 								   
+	```
+								   
 4. make sure the myTestApp is in settings.py INSTALLED_APPS:
     ```
 	INSTALLED_APPS = [
@@ -53,7 +57,8 @@ urlpatterns = [
     'myTestApp',
 	''
 ]
-	```
+```
+
 5. login admin page: http://127.0.0.1:8000/admin/
    find DJANGO_AMIS_RENDER---AMIS-PAGE
    press "自动添加"/"AUTOADD".
