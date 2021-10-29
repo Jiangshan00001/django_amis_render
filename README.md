@@ -55,7 +55,6 @@ urlpatterns = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myTestApp',
-	''
 ]
 ```
 
