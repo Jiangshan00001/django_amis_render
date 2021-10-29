@@ -10,7 +10,7 @@ upload:
 
 .PHONY: clean
 clean:
-	rm  -rf build dist  django_rest_admin.egg-info  django_rest_admin/__pycache__
+	rm  -rf build dist  django_amis_render.egg-info  django_amis_render/__pycache__
 
 
 
