@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8"/>
+    <title>test</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'amis/sdk.css' %}"/>
+    <link rel="stylesheet" href="{% static 'amis/ang.css' %}"/>
+    <link rel="stylesheet" href="{% static 'amis/helper.css' %}"/>
+
+</head>
+<body>
+
+
+<div id="root" class="app-wrapper"></div>
+<script src="{% static 'amis/sdk.js' %}"></script>
+<script src="{% static 'amis/papaparse.js' %}"></script>
+<script src="{% static 'amis/charts.js' %}"></script>
+<script src="{% static 'amis/exceljs.js' %}"></script>
+<script src="{% static 'django_amis_render/jquery-3.6.0.min.js' %}"></script>
+
+<script type="text/javascript">
+            var amis = amisRequire('amis/embed');
+            // 通过替换下面这个配置来生成不同页面
+            var amisJSON = $.ajax({ url:"{{ json_to_render_file_url }}",data:{"school_id":"{{ school_id }}","juror_id":"{{ juror_id }}","team_id":"{{ team_id }}","cur_user_id":"{{ cur_user_id }}"},  "datatype":"json", async:false}) ;
+            amisJSON = JSON.parse(amisJSON.responseText);
+            var amisScoped = amis.embed('#root', amisJSON,
+                                          {
+                                            // 这里是初始 props
+                                          },
+                                          {
+                                            //theme: 'ang'
+                                          });
+</script>
+
+</body>
+</html>
