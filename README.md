@@ -31,20 +31,20 @@ urlpatterns = [
   ```
   my_project----my_project
                   |
-				  |
-				  --------settings.py
-				  --------urls.py
-	        ----myTestApp     <----this is your app
-			      |
-				  ---------static
-				             |
-							 ----amis_json
-							       |
-								   --------first_page.json
-								   --------second_page.json
+                  |
+                  --------settings.py
+                  --------urls.py
+            ----myTestApp     <----this is your app
+                  |
+                  ---------static
+                             |
+                             ----amis_json
+                                   |
+                                   --------first_page.json
+                                   --------second_page.json
 								   
 	```
-								   
+
 4. make sure the myTestApp is in settings.py INSTALLED_APPS:
     ```
 	INSTALLED_APPS = [
