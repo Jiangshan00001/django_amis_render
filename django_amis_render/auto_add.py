@@ -9,6 +9,7 @@ import os
 from .models import AmisRenderList
 import pathlib
 from django.urls import reverse
+from .get_app_url_base import get_app_url_base
 
 
 def if_file_is_amis_json(file_path):
@@ -25,17 +26,21 @@ def add_one_file_to_table(file_path):
     curr = AmisRenderList.objects.filter(file_path=file_path).all()
     if len(curr)>0:
         #already exist, just skip
-        return
+        return 0
     curr = AmisRenderList()
     curr.file_path = file_path
     curr.file_type = 'json'
 
-    front_path = reverse('django_amis_render_default_list')
-    if front_path[-1]=='/':
-        front_path=front_path[:-1]
+    #front_path = reverse('django_amis_render_default_list')
+    #if front_path[-1]=='/':
+    #    front_path=front_path[:-1]
 
-    pos = front_path.rfind('/')
-    front_path=front_path[:pos]
+    #pos = front_path.rfind('/')
+    #front_path=front_path[:pos]
+    front_path = get_app_url_base('django_amis_render_default_list')
+    if front_path is None:
+        return 0
+
     curr.page_url=front_path+'/jhtml/'+pathlib.Path(file_path).name[:-5]
 
     pos = file_path.find('static')
@@ -47,8 +52,9 @@ def add_one_file_to_table(file_path):
 
     curr.html_template = None
     curr.save()
+    return 1
 
-def auto_add(request):
+def auto_add():
     bdir = settings.BASE_DIR
     #找到目录下，所有目录名称为amis_json的目录，下面的 json文件，都添加路由
     amis_json_file_list = []
@@ -60,12 +66,14 @@ def auto_add(request):
             root=root[blen:]
         for name in files:
             file_name =os.path.join(root, name)
-            print(file_name)
+            #print(file_name)
             if if_file_is_amis_json(file_name):
                 amis_json_file_list.append(file_name)
 
-    print(amis_json_file_list)
+    #print(amis_json_file_list)
+    add_cnt=0
     for i in amis_json_file_list:
-        add_one_file_to_table(i)
+        add_len = add_one_file_to_table(i)
+        add_cnt+=add_len
 
-    return HttpResponse('ok')
+    return add_cnt

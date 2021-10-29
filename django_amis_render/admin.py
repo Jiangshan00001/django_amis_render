@@ -29,8 +29,8 @@ class AmisRenderListAdmin(admin.ModelAdmin):
 
 
     def auto_add_action(self, request):
-        auto_add(request)
-        self.message_user(request, "OK")
+        add_cnt = auto_add()
+        self.message_user(request, "自动添加文件数："+str(add_cnt))
         return HttpResponseRedirect("../")
 
     def button_link(self, obj):
