@@ -33,7 +33,9 @@ def render_this_one(request, re_one):
     file_url = re_one.json_file_url
     page_name = re_one.html_template
     print('render_amis_json', file_url)
-    if (page_name is None) or len(page_name) == 0:
+    if (page_name is not None) and len(page_name) > 0:
+        page_name = settings.BASE_DIR + page_name
+    else:
         page_name = 'html/index_for_json.html'
     if len(file_url)>3:
         if file_url[-4:]=='html':
@@ -42,12 +44,26 @@ def render_this_one(request, re_one):
 
 
 def jhtml_render(request):
+    from django.urls import reverse
     path = request.path
     print(path)
 
     re_all = AmisRenderList.objects.all()
     for i in re_all:
-        if i.page_url.strip() == path.strip():
+        try:
+            link_to = reverse(i.url_name)
+        except Exception as e:
+            link_to = None
+
+        if i.page_url_all != link_to:
+            i.page_url_all = link_to
+            i.save()
+
+    for i in re_all:
+        if i.page_url_all is None:
+            print('jhtml-render: one will not show as no url found id=',i.id)
+            continue
+        if i.page_url_all.strip() == path.strip():
             return render_this_one(request, i)
 
     #其他文件

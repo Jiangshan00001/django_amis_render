@@ -7,6 +7,10 @@
             {% csrf_token %}
                 <button type="submit">自动添加</button>
         </form>
+        <form action="auto_del_action/" method="POST">
+            {% csrf_token %}
+                <button type="submit">自动删除</button>
+        </form>
     </div>
     <br />
     {{ block.super }}

@@ -1,0 +1,5 @@
+django
+djang-filter
+django-rest-admin
+drf_aggregates
+
