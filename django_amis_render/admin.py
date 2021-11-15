@@ -1,4 +1,4 @@
-
+# coding:utf-8
 
 #https://books.agiliq.com/projects/django-admin-cookbook/en/latest/action_buttons.html
 
@@ -45,11 +45,17 @@ class AmisRenderListAdmin(admin.ModelAdmin):
     def button_link(self, obj):
         from django.urls import reverse
         try:
-            link_to = reverse(obj.url_name)
+            link_to = reverse(str(obj.app_name)+':'+str(obj.url_name))
             button_html = """<a class="changelink" href="%s">打开页面</a>""" % (link_to)
         except Exception as e:
-            link_to=reverse('django_amis_render_no_find_url_name', args=[obj.id])
-            button_html = """<a class="changelink" href="%s">未找到页面</a>"""%(link_to)
+            try:
+                link_to=reverse('django_amis_render_no_find_url_name', args=[obj.id])
+                button_html = """<a class="changelink" href="%s">未找到页面</a>""" % (link_to)
+            except Exception as e:
+                link_to = ''
+                button_html = """<a >未找到页面</a>"""
+                pass
+
         return format_html(button_html)
 
     button_link.short_description = "打开"
@@ -60,7 +66,7 @@ class AmisRenderListAdmin(admin.ModelAdmin):
 
     button_link_edit.short_description = "编辑"
 
-    list_display = ['id', 'page_url', 'file_path', 'button_link']
+    list_display = ['id', 'page_url', 'file_path', 'file_type', 'button_link']
     #actions = [make_published]
 
     class Media:
