@@ -16,30 +16,36 @@ from .models import AmisRenderList
 import os
 from django.conf import settings
 import json
-
+from pathlib import Path
 
 def update_amis_local_to_editor_one_file(route_id):
+
+    data_all = AmisRenderList.objects.filter(id=route_id).all()
+    if len(data_all)==0:
+        return 1
+
     base_dir = settings.BASE_DIR
+    print('update_amis_local_to_editor_one_file', base_dir)
+    #base_dir = Path(base_dir)
 
-    if settings.DEFAULT_AMIS_JSON_DIR is not None:
-        #return HttpResponse('需要设置json本地文件目录', status=400)
-        json_dir = settings.DEFAULT_AMIS_JSON_DIR
-    else:
-        json_dir = 'static/django_amis_render/json'
-
-    pages=[]
-    all_dir = os.path.join(base_dir, json_dir)
-
-    ajf = AmisRenderList.objects.get(id=route_id)
-    file_full_path=os.path.join(all_dir, ajf.file_path)
+    ajf = data_all[0]
+    print('ajf.file_path', ajf.file_path)
+    if len(ajf.file_path)>0 and ajf.file_path[0]=='\\':
+        ajf.file_path=ajf.file_path[1:]
+    file_full_path= os.path.join(base_dir, ajf.file_path)
     if os.path.isfile(file_full_path):
-        f = open(file_full_path, 'r', encoding='utf-8')
+        f = open(file_full_path, 'r', encoding='utf-8-sig')
         data = f.read()
         f.close()
     else:
+        print('file not exist:', file_full_path)
         #file not exist
         data = "{}"
-    pages.append({'icon': '', 'id': str(1), 'label': ajf.file_name, 'path': ajf.file_name.replace('.json', ''), 'schema': json.loads(data)})
+
+    pages = []
+    file_name = Path(file_full_path)
+    pages.append({'icon': '', 'id': str(route_id), 'label': file_name.stem,
+                  'path': file_name.stem, 'schema': json.loads(data)})
 
     store_data = {'pages':pages}
     store_data['addPageIsOpen']=False
@@ -62,16 +68,8 @@ def update_amis_local_to_editor(request):
 
 def update_amis_editor_to_local(request):
 
-    if settings.DEFAULT_AMIS_JSON_DIR is not None:
-        #return HttpResponse('需要设置json本地文件目录', status=400)
-        json_dir = settings.DEFAULT_AMIS_JSON_DIR
-    else:
-        json_dir = 'static/django_amis_render/json'
-
 
     base_dir = settings.BASE_DIR
-    all_dir = os.path.join(base_dir, json_dir)
-
 
     store = request.POST.get('store')
     print(store)
@@ -81,11 +79,22 @@ def update_amis_editor_to_local(request):
     pages=pages['pages']
     for i in pages:
         file_name = i['label']
-        full_file_name = os.path.join(all_dir, file_name)
-        print('saving file:', full_file_name)
-        f = open(full_file_name, 'w', encoding='utf-8')
-        f.write(json.dumps(i['schema'], ensure_ascii=False))#.encode('utf-8')
-        f.close()
+        id = i['id']
+        arl = AmisRenderList.objects.filter(id=id).all()
+        if len(arl)==0:
+            print('not saved. as no id found:', id)
+            continue
+
+        ajf = arl[0]
+        print('ajf.file_path', ajf.file_path)
+        if len(ajf.file_path) > 0 and ajf.file_path[0] == '\\':
+            ajf.file_path = ajf.file_path[1:]
+        full_file_name = os.path.join(base_dir, ajf.file_path)
+        if os.path.isfile(full_file_name):
+            print('saving file:', full_file_name)
+            f = open(full_file_name, 'w', encoding='utf-8-sig')
+            f.write(json.dumps(i['schema'], ensure_ascii=False))#.encode('utf-8')
+            f.close()
 
     return HttpResponse('ok', status=200)
 

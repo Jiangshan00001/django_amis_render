@@ -1,0 +1,13 @@
+{% extends 'admin/change_list.html' %}
+
+{% block object-tools %}
+    <div>
+        <label >.</label>
+        <form action="auto_add_app_action/" method="POST">
+            {% csrf_token %}
+                <button type="submit">更新/添加APP</button>
+        </form>
+    </div>
+    <br />
+    {{ block.super }}
+{% endblock %}

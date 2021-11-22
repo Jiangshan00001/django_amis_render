@@ -2,7 +2,7 @@
 
 {% block object-tools %}
     <div>
-        <label >对于app下的static/ 目录下的 amis_json目录下的json文件，会自动添加为页面.eg: some_app/static/amis_json/test1.json. or some_app/static/some_other_dir/amis_json/test1.json</label>
+        <label >对于app下的static/*/amis_json/ templates/*/amis_json/目录下的json文件，会自动添加为页面.</label>
         <form action="auto_add_action/" method="POST">
             {% csrf_token %}
                 <button type="submit">自动添加</button>
