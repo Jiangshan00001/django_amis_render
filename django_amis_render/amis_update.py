@@ -18,29 +18,56 @@ from django.conf import settings
 import json
 from pathlib import Path
 
-def update_amis_local_to_editor_one_file(route_id):
 
+def get_amis_json_file_path(route_id):
     data_all = AmisRenderList.objects.filter(id=route_id).all()
-    if len(data_all)==0:
-        return 1
-
-    base_dir = settings.BASE_DIR
-    print('update_amis_local_to_editor_one_file', base_dir)
-    #base_dir = Path(base_dir)
+    if len(data_all) == 0:
+        return None
 
     ajf = data_all[0]
-    print('ajf.file_path', ajf.file_path)
-    if len(ajf.file_path)>0 and ajf.file_path[0]=='\\':
-        ajf.file_path=ajf.file_path[1:]
+    base_dir = settings.BASE_DIR
+
     file_full_path= os.path.join(base_dir, ajf.file_path)
+    if os.path.isfile(file_full_path):
+        return file_full_path
+
+    return None
+
+
+def get_amis_json_file_content(file_full_path):
+    """
+
+    :param file_full_path:
+    :return: 字符串，文件内容
+    """
     if os.path.isfile(file_full_path):
         f = open(file_full_path, 'r', encoding='utf-8-sig')
         data = f.read()
         f.close()
-    else:
-        print('file not exist:', file_full_path)
-        #file not exist
-        data = "{}"
+        return data
+    return None
+
+def save_amis_json_file_content(file_full_path, content):
+    """
+
+    :param file_full_path:
+    :param content: dict
+    :return:
+    """
+    if os.path.isfile(file_full_path):
+        print('saving file:', file_full_path)
+        f = open(file_full_path, 'w', encoding='utf-8-sig')
+        f.write(json.dumps(content, ensure_ascii=False))  # .encode('utf-8')
+        f.close()
+        return 1
+    return 0
+
+
+def update_amis_local_to_editor_one_file(route_id):
+    file_full_path=get_amis_json_file_path(route_id)
+    data = get_amis_json_file_content(file_full_path)
+    if data is None:
+        data={}
 
     pages = []
     file_name = Path(file_full_path)
@@ -57,6 +84,30 @@ def update_amis_local_to_editor_one_file(route_id):
 
 
     return HttpResponse(json.dumps({'data':store_data,   }), status=200)
+
+    # data_all = AmisRenderList.objects.filter(id=route_id).all()
+    # if len(data_all)==0:
+    #     return 1
+    #
+    # base_dir = settings.BASE_DIR
+    # print('update_amis_local_to_editor_one_file', base_dir)
+    # #base_dir = Path(base_dir)
+    #
+    # ajf = data_all[0]
+    # print('ajf.file_path', ajf.file_path)
+    # if len(ajf.file_path)>0 and ajf.file_path[0]=='\\':
+    #     ajf.file_path=ajf.file_path[1:]
+    #
+    # file_full_path= os.path.join(base_dir, ajf.file_path)
+    # if os.path.isfile(file_full_path):
+    #     f = open(file_full_path, 'r', encoding='utf-8-sig')
+    #     data = f.read()
+    #     f.close()
+    # else:
+    #     print('file not exist:', file_full_path)
+    #     #file not exist
+    #     data = "{}"
+
 
 def update_amis_local_to_editor(request):
     route_id = request.POST.get('route_id')
@@ -80,21 +131,25 @@ def update_amis_editor_to_local(request):
     for i in pages:
         file_name = i['label']
         id = i['id']
-        arl = AmisRenderList.objects.filter(id=id).all()
-        if len(arl)==0:
-            print('not saved. as no id found:', id)
-            continue
+        full_file_name = get_amis_json_file_path(id)
 
-        ajf = arl[0]
-        print('ajf.file_path', ajf.file_path)
-        if len(ajf.file_path) > 0 and ajf.file_path[0] == '\\':
-            ajf.file_path = ajf.file_path[1:]
-        full_file_name = os.path.join(base_dir, ajf.file_path)
-        if os.path.isfile(full_file_name):
-            print('saving file:', full_file_name)
-            f = open(full_file_name, 'w', encoding='utf-8-sig')
-            f.write(json.dumps(i['schema'], ensure_ascii=False))#.encode('utf-8')
-            f.close()
+        # arl = AmisRenderList.objects.filter(id=id).all()
+        # if len(arl)==0:
+        #     print('not saved. as no id found:', id)
+        #     continue
+        #
+        # ajf = arl[0]
+        # print('ajf.file_path', ajf.file_path)
+        # if len(ajf.file_path) > 0 and ajf.file_path[0] == '\\':
+        #     ajf.file_path = ajf.file_path[1:]
+        # full_file_name = os.path.join(base_dir, ajf.file_path)
+        save_amis_json_file_content(full_file_name, i['schema'])
+        # if os.path.isfile(full_file_name):
+        #
+        #     print('saving file:', full_file_name)
+        #     f = open(full_file_name, 'w', encoding='utf-8-sig')
+        #     f.write(json.dumps(i['schema'], ensure_ascii=False))#.encode('utf-8')
+        #     f.close()
 
     return HttpResponse('ok', status=200)
 

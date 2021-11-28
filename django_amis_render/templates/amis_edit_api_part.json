@@ -1,0 +1,91 @@
+{
+    "type": "page",
+    "title": "dd",
+    "body": [
+        {
+            "type": "tpl",
+            "tpl": "这是你刚刚新增的页面。",
+            "inline": false
+        },
+        {
+            "type": "form",
+            "title": "amis_json api修改",
+            "body": [
+                {
+                    "label": "文本框",
+                    "type": "input-text",
+                    "name": "text"
+                },
+                {
+                    "type": "hbox",
+                    "gap": "base",
+                    "columns": [
+                        {
+                            "body": [
+                                {
+                                    "type": "input-tree",
+                                    "label": "树",
+                                    "name": "tree",
+                                    "options": [
+                                        {
+                                            "label": "选项A",
+                                            "value": "A",
+                                            "children": [
+                                                {
+                                                    "label": "选项C",
+                                                    "value": "C"
+                                                },
+                                                {
+                                                    "label": "选项D",
+                                                    "value": "D"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "选项B",
+                                            "value": "B"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "body": [
+                                {
+                                    "type": "input-text",
+                                    "label": "method",
+                                    "name": "method"
+                                },
+                                {
+                                    "type": "input-text",
+                                    "label": "url",
+                                    "name": "url"
+                                },
+                                {
+                                    "type": "input-text",
+                                    "label": "data",
+                                    "name": "data"
+                                },
+                                {
+                                    "type": "input-text",
+                                    "label": "headers",
+                                    "name": "headers"
+                                },
+                                {
+                                    "type": "input-text",
+                                    "label": "requestAdaptor",
+                                    "name": "requestAdaptor"
+                                },
+                                {
+                                    "type": "input-text",
+                                    "label": "adaptor",
+                                    "name": "adaptor"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -12,15 +12,12 @@ from .auto_add import parse_one_auto_urls, get_app_path, get_app_auto_urls_path
 from .auto_add import get_amis_files, add_one_file_to_table,generate_one_auto_urls, get_rcd_by_app_name
 
 
-
-
-
-
 def update_auto_read_write(app_name):
+    update_read_from_autourls(app_name,0)
+    update_write_to_autourls(app_name)
+    return 'OK'
 
-    return ''
-
-def update_read_from_autourls(app_name):
+def update_read_from_autourls(app_name, force_read=1):
     """
     从app目录读取auto_urls.py,解析内部数据，并更新数据库
     :param app_name:
@@ -54,18 +51,22 @@ def update_read_from_autourls(app_name):
         if len(arls)==0:
             #需要新增记录
             arl = AmisRenderList()
-        else:
+        elif force_read:
             #需要修改记录
             arl = arls[0]
+        else:
+            #已存在，不修改
+            continue
         arl.app_name = app_name
         arl.file_path = i['file_path']
-        arl.page_url = i['page_url']
-        arl.file_type = i['file_type']
-        arl.json_file_url = i['json_file_url']
         arl.html_template = i['html_template']
+        arl.json_file_url = i['json_file_url']
+        arl.file_type = i['file_type']
+        arl.url_name = i['url_name']
+
+        arl.page_url = i['page_url']
         arl.json_render_dict = i['json_render_dict']
         arl.json_render_func = i['json_render_func']
-        arl.url_name = i['url_name']
 
         arl.save()
 

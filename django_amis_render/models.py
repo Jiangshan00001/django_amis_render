@@ -16,7 +16,7 @@ class AmisRenderApp(models.Model):
 class AmisRenderList(models.Model):
     file_path = models.TextField(blank=True, null=True, help_text='文件保存路径，相对于项目根目录的相对路径')
     html_template = models.TextField(blank=True, null=True, help_text='渲染json用的html模板文件，不填使用默认的')
-    json_file_url = models.TextField(blank=True, null=True, help_text='用于获取json数据的url')
+    json_file_url = models.TextField(blank=True, null=True, help_text='static时用于获取json数据的url.一般来说不需要用户填写。temp时无用')
     file_type = models.TextField(blank=True, null=True, help_text='supported file type: json, temp_json or html')
     app_name = models.TextField(blank=True, null=True, help_text='文件所在的app的名称')
     url_name = models.TextField(blank=True, null=True, help_text='不需要设置。程序内部使用，用于reverse获取url')

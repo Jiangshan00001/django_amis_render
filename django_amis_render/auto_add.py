@@ -203,6 +203,12 @@ def get_rcd_by_app_name(app_name=None):
         ii = model_to_dict(i)
         if (ii['app_name'] is None) or (ii['app_name']==''):
             continue
+
+        for kk in ii:
+            if ii[kk]=='' or  ii[kk]=='None':
+                # 如果是空字符串，或字符串None,则改为None. 解决在修改保存时，json_render_dict=‘’的错误问题
+                ii[kk] =None
+
         app_name = ii['app_name']
         if app_name not in aml_app_dict:
             aml_app_dict[app_name] = []
