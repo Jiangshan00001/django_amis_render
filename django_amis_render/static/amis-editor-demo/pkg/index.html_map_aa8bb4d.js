@@ -320,17 +320,17 @@ amis.require.resourceMap({
       "pkg": "p2"
     },
     "a3e49d7": {
-      "url": "/amis-editor-demo/n/hls.js/dist/hls_b7f6fd5.js",
+      "url": "/static/amis-editor-demo/n/hls.js/dist/hls_b7f6fd5.js",
       "type": "js"
     }
   },
   "pkg": {
     "p1": {
-      "url": "/amis-editor-demo/pkg/rich-text_0720d52.js",
+      "url": "/static/amis-editor-demo/pkg/rich-text_0720d52.js",
       "type": "js"
     },
     "p2": {
-      "url": "/amis-editor-demo/pkg/echarts_8a05f8b.js",
+      "url": "/static/amis-editor-demo/pkg/echarts_8a05f8b.js",
       "type": "js"
     }
   }
