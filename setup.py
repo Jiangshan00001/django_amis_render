@@ -7,7 +7,7 @@ with open("README.md", "r", encoding='utf-8') as fh:
 	
 setuptools.setup(
     name="django_amis_render",
-    version="0.0.5",
+    version="0.0.6",
     author="jiangshan00000",
     author_email="710806594@qq.com",
     description="a django app to render amis json file to web.",
