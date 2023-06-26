@@ -3,6 +3,8 @@
 #https://books.agiliq.com/projects/django-admin-cookbook/en/latest/action_buttons.html
 
 from django.contrib import admin
+
+from django_amis_render.get_url_from_name import get_url_from_name
 from .models import AmisRenderList, AmisRenderApp
 from django.utils.html import format_html
 from django.urls import path
@@ -145,25 +147,29 @@ class AmisRenderListAdmin(admin.ModelAdmin):
         self.message_user('未找到路径。请查看：APP:', AmisRenderList.app_name,'是否有在全局urls.py中注册urls，并且app内部的urls里有写 from .auto_urls import *')
         return HttpResponseRedirect("../../")
 
-    def button_link(self, obj):
-        from django.urls import reverse
-        try:
-            app_and_url_name =str(obj.app_name)+':'+str(obj.url_name)
-            link_to = reverse(str(obj.url_name), current_app=obj.app_name)
+    def button_link_open(self, obj):
+
+        link_addr_got, link_to = get_url_from_name(obj.url_name,obj.app_name)
+        app_and_url_name =str(obj.app_name)+':'+str(obj.url_name)
+
+        
+
+        if link_addr_got:
+            # 尝试成功，直接显示连接
             button_html = """<a class="changelink" href="%s">打开</a>""" % (link_to)
-        except Exception as e:
+        else:
             link_to = ''
             button_html = """<a >未找到页面 %s. 请确认%s.urls.py设置到项目的urls.py中，且%s.urls.py 里面有 from .auto_urls import *</a>"""%(app_and_url_name, str(obj.app_name), str(obj.app_name))
 
         return format_html(button_html)
 
-    button_link.short_description = "打开页面"
+    button_link_open.short_description = "打开页面"
 
     def button_link_edit(self, obj):
         button_html = """<input type="button" value="编辑" onclick="update_amis_local_to_editor(%s)" />"""%obj.id
         return format_html(button_html)
 
-    button_link_edit.short_description = "编辑组件"
+    button_link_edit.short_description = "编辑JSON文件"
 
     def button_link_edit_api(self, obj):
         # 修改内部各组件的api initApi等
@@ -173,7 +179,7 @@ class AmisRenderListAdmin(admin.ModelAdmin):
     button_link_edit_api.short_description = "编辑API"
 
     #'file_path',
-    list_display = ['id','app_name', 'page_url',  'file_type',  'button_link_edit','button_link_edit_api','button_link']
+    list_display = ['id','app_name', 'page_url',  'file_type',  'button_link_edit','button_link_edit_api','button_link_open']
     #actions = [make_published]
 
     class Media:

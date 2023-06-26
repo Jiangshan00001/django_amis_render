@@ -11,6 +11,8 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
+from django_amis_render.get_url_from_name import get_url_from_name
+
 
 g_sys_name = platform.system()
 
@@ -57,11 +59,9 @@ def jhtml_render(request, file_type=None,json_file_url=None, html_template=None,
     from django.shortcuts import render
 
     if file_type=='temp_json':
-        try:
-            json_file_url = reverse(url_name+'_tjson', current_app=app_name)
-        except Exception as e:
-            print('ERROR: no json file url found:', file_path)
-
+        is_got, json_file_url = get_url_from_name(url_name+'_tjson', app_name)
+        if not is_got:
+            print('ERROR: no json file url found:',url_name, app_name, file_path)
 
 
     render_dict = {'json_to_render_file_url': json_file_url}

@@ -34,7 +34,7 @@ urlpatterns = [
                   |
                   --------settings.py
                   --------urls.py
-            ----myTestApp     <----this is your app
+            ----myRenderApp     <----this is your app
                   |
                   ---------static
                              |
@@ -45,7 +45,7 @@ urlpatterns = [
 								   
 	```
 
-4. make sure the myTestApp is in settings.py INSTALLED_APPS:
+4. make sure the myRenderApp is in settings.py INSTALLED_APPS:
     ```
 	INSTALLED_APPS = [
     'django.contrib.admin',
@@ -54,13 +54,19 @@ urlpatterns = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myTestApp',
+    'myRenderApp',
 ]
 ```
 
 5. login admin page: http://127.0.0.1:8000/admin/
    find DJANGO_AMIS_RENDER---AMIS-PAGE
    press "自动添加"/"AUTOADD".
+   
+6. if tips: to urls to myRenderApp.
+   set projects urls.py. add this line:
+   path('render/', include('myRenderApp.urls'))
+   
+7. finish.
    the page will be shown below.
    press open /打开页面 will open the page.
    

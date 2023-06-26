@@ -293,6 +293,7 @@ def generate_one_auto_urls(app_name, urls_mod, head_py_code=None):
         #default head_py_code
         str_to_write += 'from django.urls import re_path, path\n'
         str_to_write += 'from django_amis_render.jhtml_render import jhtml_render, render_template_json\n'
+        
 
     str_to_write += '\n'
     str_to_write += 'auto_urlpatterns=[\n'

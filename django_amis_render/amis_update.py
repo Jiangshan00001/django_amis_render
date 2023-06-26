@@ -36,6 +36,7 @@ def get_amis_json_file_path(route_id):
 
 def get_amis_json_file_content(file_full_path):
     """
+    获取json的文件内容
 
     :param file_full_path:
     :return: 字符串，文件内容
@@ -49,6 +50,7 @@ def get_amis_json_file_content(file_full_path):
 
 def save_amis_json_file_content(file_full_path, content):
     """
+    保存json的文件内容
 
     :param file_full_path:
     :param content: dict
@@ -64,6 +66,9 @@ def save_amis_json_file_content(file_full_path, content):
 
 
 def update_amis_local_to_editor_one_file(route_id):
+    """
+    读取本地的json文件，传递到editor中
+    """
     file_full_path=get_amis_json_file_path(route_id)
     data = get_amis_json_file_content(file_full_path)
     if data is None:
@@ -85,29 +90,6 @@ def update_amis_local_to_editor_one_file(route_id):
 
     return HttpResponse(json.dumps({'data':store_data,   }), status=200)
 
-    # data_all = AmisRenderList.objects.filter(id=route_id).all()
-    # if len(data_all)==0:
-    #     return 1
-    #
-    # base_dir = settings.BASE_DIR
-    # print('update_amis_local_to_editor_one_file', base_dir)
-    # #base_dir = Path(base_dir)
-    #
-    # ajf = data_all[0]
-    # print('ajf.file_path', ajf.file_path)
-    # if len(ajf.file_path)>0 and ajf.file_path[0]=='\\':
-    #     ajf.file_path=ajf.file_path[1:]
-    #
-    # file_full_path= os.path.join(base_dir, ajf.file_path)
-    # if os.path.isfile(file_full_path):
-    #     f = open(file_full_path, 'r', encoding='utf-8-sig')
-    #     data = f.read()
-    #     f.close()
-    # else:
-    #     print('file not exist:', file_full_path)
-    #     #file not exist
-    #     data = "{}"
-
 
 def update_amis_local_to_editor(request):
     route_id = request.POST.get('route_id')
@@ -118,6 +100,9 @@ def update_amis_local_to_editor(request):
     return HttpResponse(json.dumps({'data':'ok',   }), status=200)
 
 def update_amis_editor_to_local(request):
+    """
+    将editor中的数据保存到本地
+    """
 
 
     base_dir = settings.BASE_DIR
